@@ -32,7 +32,8 @@ fun main(args: Array<String>) {
 
     val seed = config.seed ?: Random.nextLong().also { println("Using random seed: $it") }
 
-    val outputDir = Path(config.outputDir).also { it.createDirectories() }
+    val resolvedDir = config.outputDir.replaceFirst(Regex("^~"), System.getProperty("user.home"))
+    val outputDir = Path(resolvedDir).also { it.createDirectories() }
 
     val programs = when (val c = config.complexity) {
         is Complexity.Mixed -> generateMixed(config.count, seed)
@@ -45,7 +46,7 @@ fun main(args: Array<String>) {
         println("Generated: $fileName (${program.length} chars)")
     }
 
-    println("Generated ${programs.size} file(s) in ${config.outputDir}")
+    println("Generated ${programs.size} file(s) in $outputDir")
 }
 
 /**
