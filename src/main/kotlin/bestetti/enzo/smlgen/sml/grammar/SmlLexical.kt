@@ -176,19 +176,31 @@ object SmlLexical {
         0.2 to eqTypeVar
     )
 
+    /** SML '97 core reserved words - these are re-rolled (never generated) */
+    private val coreReserved = setOf(
+        "abstype", "and", "andalso", "as", "case", "datatype", "do", "else",
+        "end", "exception", "fn", "fun", "handle", "if", "in", "infix",
+        "infixr", "let", "local", "nonfix", "of", "op", "open", "orelse",
+        "raise", "rec", "then", "type", "val", "while", "with", "withtype"
+    )
+
+    /** SML Modules reserved words - these are suffixed with _ to avoid clashes */
+    private val moduleReserved = setOf(
+        "eqtype", "functor", "include", "sharing", "sig",
+        "signature", "struct", "structure", "where"
+    )
+
+    /** Append underscore to an identifier if it clashes with a module keyword */
+    private fun sanitizeModuleKeyword(id: String): String =
+        if (id in moduleReserved) "${id}_" else id
+
     /** Value identifier - avoiding reserved words */
     val valueId: Generator = Generator { ctx ->
-        val reserved = setOf(
-            "abstype", "and", "andalso", "as", "case", "datatype", "do", "else",
-            "end", "exception", "fn", "fun", "handle", "if", "in", "infix",
-            "infixr", "let", "local", "nonfix", "of", "op", "open", "orelse",
-            "raise", "rec", "then", "type", "val", "while", "with", "withtype"
-        )
         var id: String
         do {
             id = shortAlphanumId(ctx)
-        } while (id in reserved)
-        id
+        } while (id in coreReserved)
+        sanitizeModuleKeyword(id)
     }
 
     /** Type constructor identifier (typically lowercase) */

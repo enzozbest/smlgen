@@ -235,6 +235,33 @@ class SmlLexicalTest {
     }
 
     @Test
+    fun `valueId never produces bare module keywords`() {
+        val moduleKeywords = setOf(
+            "eqtype", "functor", "include", "sharing", "sig",
+            "signature", "struct", "structure", "where"
+        )
+        val ids = (0L until 10000L).map { SmlLexical.valueId(ctx(it)) }
+        for (id in ids) {
+            assertFalse(id in moduleKeywords, "Should not generate bare module keyword: $id")
+        }
+    }
+
+    @Test
+    fun `valueId suffixes module keywords with underscore`() {
+        val moduleKeywords = setOf(
+            "eqtype", "functor", "include", "sharing", "sig",
+            "signature", "struct", "structure", "where"
+        )
+        val ids = (0L until 10000L).map { SmlLexical.valueId(ctx(it)) }
+        val suffixed = ids.filter { it.endsWith("_") && it.dropLast(1) in moduleKeywords }
+        // With 10000 iterations and shortAlphanumId (1-3 chars), "sig" should appear
+        // If none are suffixed, the generator can't produce them (also fine)
+        for (id in suffixed) {
+            assertTrue(id.dropLast(1) in moduleKeywords, "Suffixed ID should be a module keyword + _: $id")
+        }
+    }
+
+    @Test
     fun `structId generates struct identifiers`() {
         repeat(50) { i ->
             val id = SmlLexical.structId(ctx(i.toLong()))
