@@ -8,7 +8,7 @@ group = "bestetti.enzo"
 version = "1.0-SNAPSHOT"
 
 application {
-    mainClass.set("bestetti.enzo.smlgen.sml.MainKt")
+    mainClass.set("bestetti.enzo.smlgen.MainKt")
 }
 
 repositories {
