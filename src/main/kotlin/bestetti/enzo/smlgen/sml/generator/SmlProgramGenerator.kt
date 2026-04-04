@@ -26,8 +26,7 @@ object SmlProgramGenerator {
     fun generate(config: ProgramConfig): String {
         var currentComplexity = config.complexity
         var attempts = 0
-        val maxAttempts = 10
-        while (attempts < maxAttempts) {
+        while (true) {
             val genConfig = currentComplexity.toConfig()
             val ctx = GenerationContext(random = Random(config.seed + attempts), config = genConfig)
             val generator = selectGenerator(config.copy(complexity = currentComplexity))

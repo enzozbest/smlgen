@@ -181,8 +181,8 @@ object SmlExpressions {
         terminals = listOf(simpleAtomicExpr),
         recursives = listOf(
             weightedChoice(
-                0.18 to simpleAtomicExpr,
-                0.11 to appExpr,
+                0.15 to simpleAtomicExpr,
+                0.09 to appExpr,
                 0.10 to infixExpr,
                 0.10 to ifExpr,
                 0.08 to fnExpr,
@@ -193,10 +193,12 @@ object SmlExpressions {
                 0.04 to consExpr,
                 0.03 to andalsoExpr,
                 0.03 to orelseExpr,
+                0.03 to seqExpr,
                 0.02 to typedExpr,
                 0.02 to handleExpr,
                 0.02 to raiseExpr,
-                0.02 to whileExpr
+                0.02 to whileExpr,
+                0.02 to multiAppExpr
             )
         )
     )

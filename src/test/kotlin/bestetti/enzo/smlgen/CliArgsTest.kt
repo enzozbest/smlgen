@@ -2,6 +2,7 @@ package bestetti.enzo.smlgen
 
 import bestetti.enzo.smlgen.sml.generator.ProgramComplexity
 import kotlin.test.assertEquals
+import kotlin.test.assertFalse
 import kotlin.test.assertFailsWith
 import kotlin.test.assertNull
 import kotlin.test.assertTrue
@@ -185,5 +186,111 @@ class CliArgsTest {
         val a = Complexity.Single(ProgramComplexity.MEDIUM)
         val b = Complexity.Single(ProgramComplexity.MEDIUM)
         assertEquals(a, b)
+    }
+
+    @Test
+    fun `Complexity Single equals same reference returns true`() {
+        val a: Any = Complexity.Single(ProgramComplexity.MEDIUM)
+        assertTrue(a.equals(a))
+    }
+
+    @Test
+    fun `Complexity Single equals different type returns false`() {
+        val a: Any = Complexity.Single(ProgramComplexity.MEDIUM)
+        assertFalse(a.equals("not a Single"))
+    }
+
+    @Test
+    fun `Complexity Single equals null returns false`() {
+        val a: Any = Complexity.Single(ProgramComplexity.MEDIUM)
+        assertFalse(a.equals(null))
+    }
+
+    @Test
+    fun `data class toString includes fields`() {
+        val args = CliArgs(count = 5, seed = 42L, outputDir = "/tmp", complexity = Complexity.Mixed)
+        val str = args.toString()
+        assertTrue(str.contains("5"))
+        assertTrue(str.contains("42"))
+        assertTrue(str.contains("/tmp"))
+    }
+
+    @Test
+    fun `data class hashCode is consistent`() {
+        val a = CliArgs(count = 5, seed = 42L, outputDir = "/tmp", complexity = Complexity.Mixed)
+        val b = CliArgs(count = 5, seed = 42L, outputDir = "/tmp", complexity = Complexity.Mixed)
+        assertEquals(a.hashCode(), b.hashCode())
+    }
+
+    @Test
+    fun `data class copy with no arguments`() {
+        val original = CliArgs(count = 5, seed = 42L, outputDir = "/tmp", complexity = Complexity.Mixed)
+        val copy = original.copy()
+        assertEquals(original, copy)
+    }
+
+    @Test
+    fun `data class copy with all arguments`() {
+        val original = CliArgs()
+        val copy = original.copy(
+            count = 20,
+            seed = 100L,
+            outputDir = "/out",
+            complexity = Complexity.Single(ProgramComplexity.SIMPLE)
+        )
+        assertEquals(20, copy.count)
+        assertEquals(100L, copy.seed)
+        assertEquals("/out", copy.outputDir)
+        assertEquals(Complexity.Single(ProgramComplexity.SIMPLE), copy.complexity)
+    }
+
+    @Test
+    fun `data class destructuring`() {
+        val args = CliArgs(count = 5, seed = 42L, outputDir = "/tmp", complexity = Complexity.Mixed)
+        val (count, seed, outputDir, complexity) = args
+        assertEquals(5, count)
+        assertEquals(42L, seed)
+        assertEquals("/tmp", outputDir)
+        assertEquals(Complexity.Mixed, complexity)
+    }
+
+    @Test
+    fun `Complexity Single toString`() {
+        val single = Complexity.Single(ProgramComplexity.MEDIUM)
+        assertTrue(single.toString().contains("MEDIUM"))
+    }
+
+    @Test
+    fun `Complexity Single hashCode is consistent`() {
+        val a = Complexity.Single(ProgramComplexity.MEDIUM)
+        val b = Complexity.Single(ProgramComplexity.MEDIUM)
+        assertEquals(a.hashCode(), b.hashCode())
+    }
+
+    @Test
+    fun `Complexity Single copy with argument`() {
+        val original = Complexity.Single(ProgramComplexity.MEDIUM)
+        val copy = original.copy(level = ProgramComplexity.SIMPLE)
+        assertEquals(Complexity.Single(ProgramComplexity.SIMPLE), copy)
+    }
+
+    @Test
+    fun `Complexity Single copy with no arguments`() {
+        val original = Complexity.Single(ProgramComplexity.MEDIUM)
+        val copy = original.copy()
+        assertEquals(original, copy)
+    }
+
+    @Test
+    fun `Complexity Single destructuring`() {
+        val single = Complexity.Single(ProgramComplexity.MEDIUM)
+        val (level) = single
+        assertEquals(ProgramComplexity.MEDIUM, level)
+    }
+
+    @Test
+    fun `Complexity Single level accessor`() {
+        val single = Complexity.Single(ProgramComplexity.MEDIUM)
+        assertEquals(ProgramComplexity.MEDIUM, single.level)
     }
 }

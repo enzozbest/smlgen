@@ -112,4 +112,13 @@ class SmlExpressionsTest {
         val result2 = SmlExpressions.expression(ctx(12345L))
         assertTrue(result1 == result2, "Same seed should produce same result")
     }
+
+    @Test
+    fun `expression covers sequence and multi-application forms`() {
+        // Run with enough seeds to ensure seqExpr (3%) and multiAppExpr (2%) are selected
+        val results = (0L until 500L).map { SmlExpressions.expression(ctx(it)) }
+        val withSemicolon = results.count { it.contains(";") }
+        assertTrue(withSemicolon > 0, "Should produce some sequence expressions containing ';'")
+        assertTrue(results.toSet().size > 100, "Should produce many unique expressions")
+    }
 }

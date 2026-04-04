@@ -332,4 +332,9 @@ class SmlLexicalTest {
         val result2 = SmlLexical.alphanumId(ctx(12345L))
         assertEquals(result1, result2, "Same seed should produce same result")
     }
+
+    @Test
+    fun `alphabet covers full byte range`() {
+        assertEquals(0..255, SmlLexical.alphabet)
+    }
 }
