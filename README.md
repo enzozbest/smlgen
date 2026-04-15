@@ -1,5 +1,7 @@
 # SMLGen
 
+[![DOI](https://zenodo.org/badge/1168615417.svg)](https://doi.org/10.5281/zenodo.19593552)
+
 A Standard ML program generator written in Kotlin. SMLGen produces syntactically valid SML '97 programs at configurable
 complexity levels, designed for building test corpora for compiler and interpreter testing, fuzz testing, and
 property-based testing.
